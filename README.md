@@ -1,0 +1,2 @@
+# KNR
+ K&R exercise
