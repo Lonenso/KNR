@@ -1,0 +1,86 @@
+#include <stdio.h>
+// 删除C语言程序中所有注释
+// 匹配到/*, 一直寻找*/, 否则寻找//
+// 漏了一种情况, 在引号内的
+// 如果双斜杠前只有空格和tab, 要不要都去掉
+// 原答案只处理 /**/, 没有处理 "//"
+
+int main()
+{
+    int c;
+    int d;
+
+    // slashAsterisk
+    int sa = 0;
+    //  double slash
+    int ds = 0;
+    //  single quote
+    int sq = 0;
+    int dq = 0;
+
+    while ((c = getchar()) != EOF)
+    {
+        if (sq || dq)
+        {
+            putchar(c);
+            if (sq && (c == '\''))
+            {
+                sq = 0;
+            }
+            if (dq && (c == '\"'))
+            {
+                dq = 0;
+            }
+        }
+        else if (sa)
+        {
+            // eat every char
+            if (c == '*')
+            {
+                if ((d = getchar()) == '/')
+                {
+                    sa = 0;
+                }
+            }
+        }
+        else if (ds)
+        {
+            // eat every char in this line
+            if (c == '\n')
+            {
+                ds = 0;
+                putchar('\n');
+            }
+        }
+        else if (c == '/')
+        {
+            d = getchar();
+            if (d == '*')
+            {
+                sa = 1;
+            }
+            else if (d == '/')
+            {
+                ds = 1;
+            }
+        }
+        else if (c == '\'' || c == '"') {
+            putchar(c);
+            while ((d =getchar()) != c) {
+                putchar(d);
+                if (d == '\\') {
+                    putchar(getchar());
+                }
+            }
+            putchar(d);
+        }
+        else if (c == '\n')
+        {
+            putchar('\n');
+        }
+        else
+        {
+            putchar(c);
+        }
+    }
+}
